@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Methods Comparison Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Inventory Methods Comparison Tool</h1>
+            <p>Compare FIFO, LIFO, and Weighted Average inventory valuation methods</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <h2>Inventory Data Input</h2>
+                <div class="input-group">
+                    <h3>Purchases</h3>
+                    <div id="purchases-container">
+                        <div class="purchase-row">
+                            <input type="date" class="purchase-date" placeholder="Date">
+                            <input type="number" class="purchase-quantity" placeholder="Quantity" min="1">
+                            <input type="number" class="purchase-price" placeholder="Unit Cost ($)" step="0.01" min="0">
+                            <button type="button" class="remove-purchase">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-purchase">Add Purchase</button>
+                </div>
+
+                <div class="input-group">
+                    <h3>Sales</h3>
+                    <div id="sales-container">
+                        <div class="sale-row">
+                            <input type="date" class="sale-date" placeholder="Date">
+                            <input type="number" class="sale-quantity" placeholder="Quantity Sold" min="1">
+                            <input type="number" class="sale-price" placeholder="Sale Price ($)" step="0.01" min="0">
+                            <button type="button" class="remove-sale">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" id="add-sale">Add Sale</button>
+                </div>
+
+                <div class="controls">
+                    <button type="button" id="calculate-btn">Calculate & Compare</button>
+                    <button type="button" id="clear-btn">Clear All</button>
+                    <button type="button" id="sample-data-btn">Load Sample Data</button>
+                </div>
+            </section>
+
+            <section class="results-section" id="results-section" style="display: none;">
+                <h2>Inventory Methods Comparison</h2>
+                
+                <div class="comparison-grid">
+                    <div class="method-card fifo">
+                        <h3>FIFO (First In, First Out)</h3>
+                        <div class="method-results">
+                            <div class="result-item">
+                                <span class="label">Cost of Goods Sold:</span>
+                                <span class="value" id="fifo-cogs">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Ending Inventory:</span>
+                                <span class="value" id="fifo-inventory">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Gross Profit:</span>
+                                <span class="value" id="fifo-profit">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Profit Margin:</span>
+                                <span class="value" id="fifo-margin">0.00%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="method-card lifo">
+                        <h3>LIFO (Last In, First Out)</h3>
+                        <div class="method-results">
+                            <div class="result-item">
+                                <span class="label">Cost of Goods Sold:</span>
+                                <span class="value" id="lifo-cogs">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Ending Inventory:</span>
+                                <span class="value" id="lifo-inventory">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Gross Profit:</span>
+                                <span class="value" id="lifo-profit">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Profit Margin:</span>
+                                <span class="value" id="lifo-margin">0.00%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="method-card weighted-avg">
+                        <h3>Weighted Average</h3>
+                        <div class="method-results">
+                            <div class="result-item">
+                                <span class="label">Cost of Goods Sold:</span>
+                                <span class="value" id="wa-cogs">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Ending Inventory:</span>
+                                <span class="value" id="wa-inventory">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Gross Profit:</span>
+                                <span class="value" id="wa-profit">$0.00</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="label">Profit Margin:</span>
+                                <span class="value" id="wa-margin">0.00%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="impact-analysis">
+                    <h3>Impact Analysis</h3>
+                    <div class="analysis-grid">
+                        <div class="analysis-item">
+                            <h4>COGS Difference</h4>
+                            <p>FIFO vs LIFO: <span id="cogs-diff-fifo-lifo">$0.00</span></p>
+                            <p>FIFO vs Weighted Avg: <span id="cogs-diff-fifo-wa">$0.00</span></p>
+                            <p>LIFO vs Weighted Avg: <span id="cogs-diff-lifo-wa">$0.00</span></p>
+                        </div>
+                        <div class="analysis-item">
+                            <h4>Inventory Value Difference</h4>
+                            <p>FIFO vs LIFO: <span id="inv-diff-fifo-lifo">$0.00</span></p>
+                            <p>FIFO vs Weighted Avg: <span id="inv-diff-fifo-wa">$0.00</span></p>
+                            <p>LIFO vs Weighted Avg: <span id="inv-diff-lifo-wa">$0.00</span></p>
+                        </div>
+                        <div class="analysis-item">
+                            <h4>Tax Impact (assuming 25% rate)</h4>
+                            <p>FIFO vs LIFO: <span id="tax-diff-fifo-lifo">$0.00</span></p>
+                            <p>FIFO vs Weighted Avg: <span id="tax-diff-fifo-wa">$0.00</span></p>
+                            <p>LIFO vs Weighted Avg: <span id="tax-diff-lifo-wa">$0.00</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detailed-calculations">
+                    <h3>Detailed Calculations</h3>
+                    <div class="calc-tabs">
+                        <button class="tab-btn active" data-method="fifo">FIFO Details</button>
+                        <button class="tab-btn" data-method="lifo">LIFO Details</button>
+                        <button class="tab-btn" data-method="wa">Weighted Average Details</button>
+                    </div>
+                    <div id="calc-details" class="calc-content">
+                        <!-- Calculation details will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
